@@ -3,8 +3,6 @@ import MovieDetailsPage from './pages/movieDetailsPage';
 import {MovieImage} from './types/interfaces';
 import sample from './stories/sampleData';
 
-const movies = [sample, sample, sample, sample, sample, sample, sample];
-
 const App = () => {
   return (
     <MovieDetailsPage movie={sample} images={images} />
