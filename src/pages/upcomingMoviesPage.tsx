@@ -6,15 +6,15 @@ import { getUpcomingMovies } from "../api/tmdb-api";
 
 const UpcomingMoviesPage: React.FC = () => {
   const [movies, setMovies] = useState<BaseMovieProps[]>([]);
-  const favourites = movies.filter(m => m.favourite)
-  localStorage.setItem('favourites', JSON.stringify(favourites))
-  // New function
-  const addToFavourites = (movieId: number) => {
-    const updatedMovies = movies.map((m: BaseMovieProps) =>
-      m.id === movieId ? { ...m, favourite: true } : m
-    );
-    setMovies(updatedMovies);
-  };
+  // const favourites = movies.filter(m => m.favourite)
+  // localStorage.setItem('favourites', JSON.stringify(favourites))
+  // // New function
+  // const addToFavourites = (movieId: number) => {
+  //   const updatedMovies = movies.map((m: BaseMovieProps) =>
+  //     m.id === movieId ? { ...m, favourite: true } : m
+  //   );
+  //   setMovies(updatedMovies);
+  // };
 
  useEffect(() => {
     getUpcomingMovies().then(movies => {
@@ -28,7 +28,7 @@ const UpcomingMoviesPage: React.FC = () => {
     <PageTemplate
       title='Upcoming Movies'
       movies={movies}
-      selectFavourite={addToFavourites}
+      //selectFavourite={addToFavourites}
     />
   );
 };

@@ -1,12 +1,12 @@
 import React from "react";
-import PageTemplate from '../components/templateMovieListPage';
+import PageTemplate from "../components/templateMovieListPage";
 import { getMovies } from "../api/tmdb-api";
 import useFiltering from "../hooks/useFiltering";
 import MovieFilterUI, { titleFilter, genreFilter } from "../components/movieFilterUI";
-import { DiscoverMovies } from "../types/interfaces";
+import { DiscoverMovies, BaseMovieProps } from "../types/interfaces";
 import { useQuery } from "react-query";
 import Spinner from "../components/spinner";
-
+import AddToFavouritesIcon from "../components/cardIcons/addToFavourites";
 
 const titleFiltering = {
   name: "title",
@@ -20,10 +20,14 @@ const genreFiltering = {
 };
 
 const HomePage: React.FC = () => {
-  const { data, error, isLoading, isError } = useQuery<DiscoverMovies, Error>("discover", getMovies);
-  const { filterValues, setFilterValues, filterFunction } = useFiltering(
-    [titleFiltering, genreFiltering]
+  const { data, error, isLoading, isError } = useQuery<DiscoverMovies, Error>(
+    "discover",
+    getMovies
   );
+  const { filterValues, setFilterValues, filterFunction } = useFiltering([
+    titleFiltering,
+    genreFiltering,
+  ]);
 
   if (isLoading) {
     return <Spinner />;
@@ -42,20 +46,22 @@ const HomePage: React.FC = () => {
     setFilterValues(updatedFilterSet);
   };
 
-  const movies = data ? data.results : [];  
+  const movies = data ? data.results : [];
   const displayedMovies = filterFunction(movies);
 
   // Redundant, but necessary to avoid app crashing.
-  const favourites = movies.filter(m => m.favourite)
-  localStorage.setItem("favourites", JSON.stringify(favourites));
-  const addToFavourites = (movieId: number) => true;
+  // const favourites = movies.filter((m) => m.favourite);
+  // localStorage.setItem("favourites", JSON.stringify(favourites));
+  // const addToFavourites = (movieId: number) => true;
 
   return (
     <>
       <PageTemplate
-        title='Discover Movies'
+        title="Discover Movies"
         movies={displayedMovies}
-        selectFavourite={addToFavourites}
+        action={(movie: BaseMovieProps) => {
+          return <AddToFavouritesIcon {...movie} />
+        }}
       />
       <MovieFilterUI
         onFilterValuesChange={changeFilterValues}
