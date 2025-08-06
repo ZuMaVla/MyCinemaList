@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import HomeIcon from "@mui/icons-material/Home";
 import Avatar from "@mui/material/Avatar";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import Box from "@mui/material/Box"; 
 import { MovieDetailsProps } from "../../types/interfaces"; 
 import { MoviesContext } from "../../contexts/moviesContext";
@@ -33,6 +34,8 @@ const MovieHeader: React.FC<MovieDetailsProps> = (movie) => {
 
   const { favourites } = useContext(MoviesContext);
   const isFavourite = favourites.includes(movie.id);
+  const { mustWatch } = useContext(MoviesContext);
+  const isMustWatch = mustWatch.includes(movie.id);
   
   return (
     <Paper component="div" sx={styles.root}>
@@ -45,6 +48,11 @@ const MovieHeader: React.FC<MovieDetailsProps> = (movie) => {
             <FavoriteIcon />
           </Avatar>
         ) : null}      
+        {isMustWatch ? (
+          <Avatar sx={styles.avatar}>
+            <PlaylistAddCheckIcon />
+          </Avatar>
+        ) : null}
       <Typography variant="h4" component="h3">
         {movie.title}{"   "}
         <a href={movie.homepage}>
