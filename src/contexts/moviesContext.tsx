@@ -8,6 +8,7 @@ interface MovieContextInterface {
   addReview: (movie: BaseMovieProps, review: Review) => void;
   mustWatch: number[];
   addToMustWatch: (movie: BaseMovieProps) => void;
+  removeFromMustWatch: (movie: BaseMovieProps) => void;
 }
 const initialContextState: MovieContextInterface = {
   favourites: [],
@@ -16,6 +17,7 @@ const initialContextState: MovieContextInterface = {
   addReview: (movie, review) => { movie.id, review; },
   mustWatch: [],
   addToMustWatch: () => {},
+  removeFromMustWatch: () => {},
 };
 
 export const MoviesContext =
@@ -56,6 +58,12 @@ const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({
     });
   }, []);
 
+  const removeFromMustWatch = useCallback((movie: BaseMovieProps) => {
+    setMustWatch((prevMustWatch) =>
+      prevMustWatch.filter((mId) => mId !== movie.id)
+    );
+  }, []);
+
   return (
     <MoviesContext.Provider
       value={{
@@ -65,6 +73,7 @@ const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({
         addReview,
         mustWatch,
         addToMustWatch,
+        removeFromMustWatch,
       }}
     >
       {children}
