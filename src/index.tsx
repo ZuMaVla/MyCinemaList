@@ -13,7 +13,8 @@ import MoviesContextProvider from "./contexts/moviesContext";
 import AddMovieReviewPage from './pages/addMovieReviewPage';
 import MustWatchMoviesPage from "./pages/mustWatchPage";
 import { AuthProvider } from "./contexts/authContext";
-import LoginPage from "./pages/loginPage";
+//import LoginPage from "./pages/loginPage";
+import AuthPage from "./pages/authPage";
 import ProtectedRoute from "./components/protectedRoute";
 
 
@@ -35,7 +36,7 @@ const App = () => {
           <SiteHeader />      {/* New Header  */}
             <MoviesContextProvider>
               <Routes>
-                <Route path="/login" element={<LoginPage />} />
+                <Route path="/login" element={<AuthPage />} />
                 <Route path="/movies/favourites" element={
                   <ProtectedRoute>
                     <FavouriteMoviesPage />
@@ -46,7 +47,6 @@ const App = () => {
                 <Route path="/movies/:id" element={<MoviePage />} />
                 <Route path="/reviews/:id" element={<MovieReviewPage/>} />
                 <Route path="/reviews/form" element={<AddMovieReviewPage/>} />
-                <Route path="/movies/mustwatch" element={<MustWatchMoviesPage />} />
                 <Route path="/movies/mustwatch" element={
                   <ProtectedRoute>
                     <MustWatchMoviesPage />
