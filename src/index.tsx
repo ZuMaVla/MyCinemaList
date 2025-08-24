@@ -13,7 +13,7 @@ import MoviesContextProvider from "./contexts/moviesContext";
 import AddMovieReviewPage from './pages/addMovieReviewPage';
 import MustWatchMoviesPage from "./pages/mustWatchPage";
 import { AuthProvider } from "./contexts/authContext";
-//import LoginPage from "./pages/loginPage";
+import ChangePasswordPage from "./pages/changePasswordPage";
 import AuthPage from "./pages/authPage";
 import ProtectedRoute from "./components/protectedRoute";
 
@@ -54,6 +54,7 @@ const App = () => {
                   }
                 />
                 <Route path="/" element={<HomePage />} />
+                <Route path="/changepassword" element={<ChangePasswordPage />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>
             </MoviesContextProvider>
