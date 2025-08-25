@@ -55,6 +55,7 @@ const App = () => {
                 />
                 <Route path="/" element={<HomePage />} />
                 <Route path="/changepassword" element={<ChangePasswordPage />} />
+                <Route path="/authpage" element={<AuthPage />} />
                 <Route path="*" element={<Navigate to="/" />} />
               </Routes>
             </MoviesContextProvider>

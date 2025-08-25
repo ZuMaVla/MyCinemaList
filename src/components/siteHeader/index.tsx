@@ -11,6 +11,7 @@ import Menu from "@mui/material/Menu";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useAuth } from "../../contexts/authContext";
 
 const styles = {
     title: {
@@ -29,15 +30,26 @@ const SiteHeader: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
 
+  const { user, signOut } = useAuth();
+
   const menuOptions = [
     { label: "Home", path: "/" },
     { label: "Upcoming", path: "/movies/upcoming" },
-    { label: "Favorites", path: "/movies/favourites" },
-    { label: "Must Watch", path: "/movies/mustwatch" },
-    { label: "Option 4", path: "/" },
   ];
+  if (user) {
+    menuOptions.push({ label: "Favorites", path: "/movies/favourites" });
+    menuOptions.push({ label: "Must Watch", path: "/movies/mustwatch" });
+    menuOptions.push({ label: "Sign Out", path: "/signout" });
+  } else {
+    menuOptions.push({ label: "Sign In | Up", path: "/authpage" });
+  }
 
   const handleMenuSelect = (pageURL: string) => {
+    if (pageURL === "/signout") {
+      signOut();
+      navigate("/")
+      return;
+    }
     navigate(pageURL);
   };
 
