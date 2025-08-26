@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import { MoviesContext } from "../../contexts/moviesContext";
 import { useLocation } from "react-router-dom";
+import AddToListButton from "../addToListButton";
 
 
 const styles = {
@@ -40,6 +41,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, action }) => {
   const isFavourite = favourites.find((id) => id === movie.id) ? true : false;
   const { mustWatch } = useContext(MoviesContext);
   const isMustWatch = mustWatch.find((id) => id === movie.id) ? true : false;
+  //const { favourites, mustWatch, currentUser } = useContext(MoviesContext);
 
   return (
     <Card sx={styles.card}>
@@ -90,6 +92,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, action }) => {
       </CardContent>
       <CardActions disableSpacing>
         {action && action(movie)}
+        <AddToListButton user={null} movieId={movie.id} /> {/*user={currentUser}  */}
         <Link to={`/movies/${movie.id}`}>
           <Button variant="outlined" size="medium" color="primary">
             More Info ...
