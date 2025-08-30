@@ -14,23 +14,27 @@ interface AuthContextType {
   resetPassword: (email: string) => Promise<void>;
   updatePassword: (password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       //Get user on start
       setUser(data.session?.user ?? null);
+      setLoading(false);
     });
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         // Listen for changes in the user's authentication state
         setUser(session?.user ?? null);
+        setLoading(false);
       }
     );
 
@@ -77,7 +81,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, signUp, signIn, resetPassword, updatePassword, signOut }}
+      value={{ user, signUp, signIn, resetPassword, updatePassword, signOut, loading }}
     >
       {children}
     </AuthContext.Provider>
