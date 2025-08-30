@@ -39,6 +39,7 @@ const SiteHeader: React.FC = () => {
   if (user) {
     menuOptions.push({ label: "Favorites", path: "/movies/favourites" });
     menuOptions.push({ label: "Must Watch", path: "/movies/mustwatch" });
+    menuOptions.push({ label: "Watched", path: "/movies/watched" });
     menuOptions.push({ label: "Sign Out", path: "/signout" });
   } else {
     menuOptions.push({ label: "Sign In | Up", path: "/authpage" });

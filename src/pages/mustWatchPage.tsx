@@ -6,8 +6,7 @@ import { MoviesContext } from "../contexts/moviesContext";
 import { useQueries } from "react-query";
 import { getMovie } from "../api/tmdb-api";
 import Spinner from "../components/spinner";
-import RemoveFromMustWatch from "../components/cardIcons/removeFromMustWatch";
-
+import WriteReview from "../components/cardIcons/writeReview";
 
 const titleFiltering = {
   name: "title",
@@ -20,52 +19,43 @@ const genreFiltering = {
   condition: genreFilter,
 };
 
-const MustWatchMoviesPage: React.FC= () => {
-  const { mustWatch: movieIds } = useContext(MoviesContext);
+const MustWatchMoviesPage: React.FC = () => {
+  const { userLists } = useContext(MoviesContext);
   const { filterValues, setFilterValues, filterFunction } = useFiltering(
     [titleFiltering, genreFiltering]
   );
 
-  // Create an array of queries and run them in parallel
+  const movieIds: number[] = userLists.mustwatch || [];
+
+  // Create parallel queries for must watch movies
   const mustWatchMovieQueries = useQueries(
-    movieIds.map((movieId) => {
-      return {
-        queryKey: ["movie", movieId],
-        queryFn: () => getMovie(movieId.toString()),
-      };
-    })
+    movieIds.map((movieId: number) => ({
+      queryKey: ["movie", movieId],
+      queryFn: () => getMovie(movieId.toString()),
+    }))
   );
-  
-  // Check if any of the parallel queries is still loading.
-  const isLoading = mustWatchMovieQueries.find((m) => m.isLoading === true);
 
-  if (isLoading) {
-    return <Spinner />;
-  }
+  const isLoading = mustWatchMovieQueries.some((q) => q.isLoading);
+  if (isLoading) return <Spinner />;
 
-//  const displayedMovies = mustWatchMovieQueries.filter((q) => q.isSuccess && q.data).map((q) => q.data)
-
-  const allMustWatch = mustWatchMovieQueries.map((q) => q.data);
-  const displayedMovies = allMustWatch ? filterFunction(allMustWatch) : [];
+  const allMustWatch = mustWatchMovieQueries.map((q) => q.data).filter(Boolean);
+  const displayedMovies = filterFunction(allMustWatch);
 
   const changeFilterValues = (type: string, value: string) => {
-    const changedFilter = { name: type, value: value };
+    const changedFilter = { name: type, value };
     const updatedFilterSet =
       type === "title" ? [changedFilter, filterValues[1]] : [filterValues[0], changedFilter];
     setFilterValues(updatedFilterSet);
   };
-
 
   return (
     <>
       <PageTemplate
         title="Must Watch Movies"
         movies={displayedMovies}
-        action={(movie) => {
-          return (
-            <RemoveFromMustWatch {...movie} />
-          );
-        }}
+        action={(movie) => (
+          <WriteReview {...movie} />
+        )}
       />
       <MovieFilterUI
         onFilterValuesChange={changeFilterValues}
