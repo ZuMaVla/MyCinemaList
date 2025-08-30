@@ -11,21 +11,17 @@ import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import CalendarIcon from "@mui/icons-material/CalendarTodayTwoTone";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import Grid from "@mui/material/Grid";
+import Avatar from "@mui/material/Avatar";
+import { Link, useLocation } from "react-router-dom";
 import img from '../../images/film-poster-placeholder.png';
 import { BaseMovieProps } from "../../types/interfaces";
-import { Link } from "react-router-dom";
-import Avatar from "@mui/material/Avatar";
-import { MoviesContext } from "../../contexts/moviesContext";
-import { useLocation } from "react-router-dom";
 import AddToListButton from "../addToListButton";
-
+import { MoviesContext } from "../../contexts/moviesContext";
 
 const styles = {
   card: { maxWidth: 345 },
   media: { height: 500 },
-  avatar: {
-    backgroundColor: "rgb(255, 0, 0)",
-  },
+  avatar: { backgroundColor: "rgb(255, 0, 0)" },
 };
 
 interface MovieCardProps {
@@ -37,62 +33,53 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, action }) => {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
   const isUpcomingPage = location.pathname.includes("/movies/upcoming");
-  const { favourites } = useContext(MoviesContext);
-  const isFavourite = favourites.find((id) => id === movie.id) ? true : false;
-  const { mustWatch } = useContext(MoviesContext);
-  const isMustWatch = mustWatch.find((id) => id === movie.id) ? true : false;
-  //const { favourites, mustWatch, currentUser } = useContext(MoviesContext);
+
+  const { userLists } = useContext(MoviesContext);
+
+  const isFavourite = userLists.favourite.includes(movie.id);
+  const isMustWatch = userLists.mustwatch.includes(movie.id);
+  const isWatched = userLists.watched.includes(movie.id);
 
   return (
     <Card sx={styles.card}>
       <CardHeader
         avatar={
           <>
-          { (isFavourite && isHomePage) && (
-            <Avatar sx={styles.avatar}>
-              <FavoriteIcon />
-            </Avatar>
-          )}
-          { (isMustWatch && isUpcomingPage) && (
-            <Avatar sx={styles.avatar}>
-              <PlaylistAddCheckIcon />
-            </Avatar>
-          )}
+            {isFavourite && isHomePage && (
+              <Avatar sx={styles.avatar}><FavoriteIcon /></Avatar>
+            )}
+            {isMustWatch && isUpcomingPage && (
+              <Avatar sx={styles.avatar}><PlaylistAddCheckIcon /></Avatar>
+            )}
           </>
         }
-      title={
-        <Typography variant="h5" component="p">
-          {movie.title}{" "}
-        </Typography>
-      }
+        title={
+          <Typography variant="h5" component="p">
+            {movie.title}
+          </Typography>
+        }
       />
       <CardMedia
         sx={styles.media}
-        image={
-          movie.poster_path
-            ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
-            : img
-        }
+        image={movie.poster_path ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}` : img}
       />
       <CardContent>
         <Grid container>
           <Grid item xs={6}>
             <Typography variant="h6" component="p">
-              <CalendarIcon fontSize="small" />
-              {movie.release_date}
+              <CalendarIcon fontSize="small" /> {movie.release_date}
             </Typography>
           </Grid>
           <Grid item xs={6}>
             <Typography variant="h6" component="p">
-              <StarRateIcon fontSize="small" />
-              {"  "} {movie.vote_average}{" "}
+              <StarRateIcon fontSize="small" /> {movie.vote_average}
             </Typography>
           </Grid>
         </Grid>
       </CardContent>
       <CardActions disableSpacing>
         {action && action(movie)}
-        <AddToListButton user={null} movieId={movie.id} /> {/*user={currentUser}  */}
+        <AddToListButton movieId={movie.id} />
         <Link to={`/movies/${movie.id}`}>
           <Button variant="outlined" size="medium" color="primary">
             More Info ...
@@ -101,7 +88,6 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, action }) => {
       </CardActions>
     </Card>
   );
-}
+};
 
 export default MovieCard;
-

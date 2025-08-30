@@ -5,7 +5,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { supabase } from "../api/supabase";
+import { supabase } from "../db/supabase";
 
 interface AuthContextType {
   user: any;

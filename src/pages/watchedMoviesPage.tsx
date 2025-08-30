@@ -6,7 +6,9 @@ import { MoviesContext } from "../contexts/moviesContext";
 import { useQueries } from "react-query";
 import { getMovie } from "../api/tmdb-api";
 import Spinner from "../components/spinner";
+import RemoveFromFavourites from "../components/cardIcons/removeFromFavourites";
 import WriteReview from "../components/cardIcons/writeReview";
+
 
 const titleFiltering = {
   name: "title",
@@ -19,43 +21,53 @@ const genreFiltering = {
   condition: genreFilter,
 };
 
-const FavouriteMoviesPage: React.FC = () => {
-  const { userLists } = useContext(MoviesContext);
+const WatchedMoviesPage: React.FC= () => {
+  const { favourites: movieIds } = useContext(MoviesContext);
   const { filterValues, setFilterValues, filterFunction } = useFiltering(
     [titleFiltering, genreFiltering]
   );
 
-  const movieIds: number[] = userLists.favourite || [];
-
-  // Create parallel queries for favourite movies
+  // Create an array of queries and run them in parallel
   const favouriteMovieQueries = useQueries(
-    movieIds.map((movieId: number) => ({
-      queryKey: ["movie", movieId],
-      queryFn: () => getMovie(movieId.toString()),
-    }))
+    movieIds.map((movieId) => {
+      return {
+        queryKey: ["movie", movieId],
+        queryFn: () => getMovie(movieId.toString()),
+      };
+    })
   );
 
-  const isLoading = favouriteMovieQueries.some((q) => q.isLoading);
-  if (isLoading) return <Spinner />;
+  // Check if any of the parallel queries is still loading.
+  const isLoading = favouriteMovieQueries.find((m) => m.isLoading === true);
 
-  const allFavourites = favouriteMovieQueries.map((q) => q.data).filter(Boolean);
-  const displayedMovies = filterFunction(allFavourites);
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  const allFavourites = favouriteMovieQueries.map((q) => q.data);
+  const displayedMovies = allFavourites ? filterFunction(allFavourites) : [];
 
   const changeFilterValues = (type: string, value: string) => {
-    const changedFilter = { name: type, value };
+    const changedFilter = { name: type, value: value };
     const updatedFilterSet =
       type === "title" ? [changedFilter, filterValues[1]] : [filterValues[0], changedFilter];
     setFilterValues(updatedFilterSet);
   };
+
 
   return (
     <>
       <PageTemplate
         title="Favourite Movies"
         movies={displayedMovies}
-        action={(movie) => (
-          <WriteReview {...movie} />
-        )}
+        action={(movie) => {
+          return (
+            <>
+              <RemoveFromFavourites {...movie} />
+              <WriteReview {...movie} />
+            </>
+          );
+        }}
       />
       <MovieFilterUI
         onFilterValuesChange={changeFilterValues}
@@ -66,4 +78,4 @@ const FavouriteMoviesPage: React.FC = () => {
   );
 };
 
-export default FavouriteMoviesPage;
+export default WatchedMoviesPage;

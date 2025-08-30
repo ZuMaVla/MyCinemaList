@@ -1,79 +1,71 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect  } from "react";
 import { BaseMovieProps, Review } from "../types/interfaces";
+import { useAuth } from "./authContext";
+
+import { fetchUserLists } from "../db/supabaseListsDB";
+
+interface UserLists {
+  favourite: number[];
+  mustwatch: number[];
+  watched: number[];
+}
 
 interface MovieContextInterface {
-  favourites: number[];
-  addToFavourites: (movie: BaseMovieProps) => void;
-  removeFromFavourites: (movie: BaseMovieProps) => void;
-  addReview: (movie: BaseMovieProps, review: Review) => void;
-  mustWatch: number[];
-  addToMustWatch: (movie: BaseMovieProps) => void;
-  removeFromMustWatch: (movie: BaseMovieProps) => void;
+  userLists: UserLists;
+  setUserLists: React.Dispatch<React.SetStateAction<UserLists>>;
+  addReview: (movie: any, review: any) => void; // adjust later if needed
 }
+
 const initialContextState: MovieContextInterface = {
-  favourites: [],
-  addToFavourites: () => {},
-  removeFromFavourites: () => {},
-  addReview: (movie, review) => { movie.id, review; },
-  mustWatch: [],
-  addToMustWatch: () => {},
-  removeFromMustWatch: () => {},
+  userLists: {
+    favourite: [],
+    mustwatch: [],
+    watched: [],
+  },
+  setUserLists: async () => {},
+  addReview: (movie, review) => {
+    movie.id;
+    review;
+  },
 };
 
-export const MoviesContext =
-  React.createContext<MovieContextInterface>(initialContextState);
 
-const MoviesContextProvider: React.FC<React.PropsWithChildren> = ({
+export const MoviesContext = React.createContext<MovieContextInterface>(
+  initialContextState
+);
+
+export const MoviesContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [favourites, setFavourites] = useState<number[]>([]);
+  const { user } = useAuth();
+
+  const [userLists, setUserLists] = useState<UserLists>(
+    initialContextState.userLists
+  );
+
+  useEffect(() => {
+    if (user) {
+      // fetch lists for logged in user
+      fetchUserLists(user.id).then((lists) => setUserLists(lists));
+    } else {
+      // reset to defaults on logout or no user
+      setUserLists(initialContextState.userLists);
+    }
+  }, [user]);  
+
+
   const [myReviews, setMyReviews] = useState<Review[]>([]);
-  const [mustWatch, setMustWatch] = useState<number[]>([]);
-
-  const addToFavourites = useCallback((movie: BaseMovieProps) => {
-    setFavourites((prevFavourites) => {
-      if (!prevFavourites.includes(movie.id)) {
-        return [...prevFavourites, movie.id];
-      }
-      return prevFavourites;
-    });
-  }, []);
-
-  const removeFromFavourites = useCallback((movie: BaseMovieProps) => {
-    setFavourites((prevFavourites) =>
-      prevFavourites.filter((mId) => mId !== movie.id)
-    );
-  }, []);
 
   const addReview = (movie: BaseMovieProps, review: Review) => {
     setMyReviews({ ...myReviews, [movie.id]: review });
   };
 
-  const addToMustWatch = useCallback((movie: BaseMovieProps) => {
-    setMustWatch((prevMustWatch) => {
-      if (!prevMustWatch.includes(movie.id)) {
-        return [...prevMustWatch, movie.id];
-      }
-      return prevMustWatch;
-    });
-  }, []);
-
-  const removeFromMustWatch = useCallback((movie: BaseMovieProps) => {
-    setMustWatch((prevMustWatch) =>
-      prevMustWatch.filter((mId) => mId !== movie.id)
-    );
-  }, []);
-
   return (
     <MoviesContext.Provider
       value={{
-        favourites,
-        addToFavourites,
-        removeFromFavourites,
+        userLists,
+        setUserLists,
         addReview,
-        mustWatch,
-        addToMustWatch,
-        removeFromMustWatch,
       }}
     >
       {children}

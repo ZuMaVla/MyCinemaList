@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../api/supabase";
+import { supabase } from "../db/supabase";
 import ChangePasswordForm from "../components/forms/changePasswordForm";
 import Spinner from "../components/spinner";
 
