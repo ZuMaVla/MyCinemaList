@@ -27,19 +27,26 @@ const FavouriteMoviesPage: React.FC = () => {
 
   const movieIds: number[] = userLists.favourite || [];
 
-  // Create parallel queries for favourite movies
-  const favouriteMovieQueries = useQueries(
-    movieIds.map((movieId: number) => ({
-      queryKey: ["movie", movieId],
-      queryFn: () => getMovie(movieId.toString()),
-    }))
-  );
+const favouriteMovieQueries = useQueries(
+  movieIds.map((movieId: number) => ({
+    queryKey: ["movie", movieId],
+    queryFn: async () => {
+      const data = await getMovie(movieId.toString());
+      return {
+        ...data,
+        genre_ids: data.genres.map((g: any) => g.id),
+      };
+    },
+  }))
+);
 
   const isLoading = favouriteMovieQueries.some((q) => q.isLoading);
+
   if (isLoading) return <Spinner />;
 
   const allFavourites = favouriteMovieQueries.map((q) => q.data).filter(Boolean);
   const displayedMovies = filterFunction(allFavourites);
+  console.log(allFavourites)
 
   const changeFilterValues = (type: string, value: string) => {
     const changedFilter = { name: type, value };

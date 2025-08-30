@@ -24,6 +24,7 @@ const HomePage: React.FC = () => {
     "discover",
     getMovies
   );
+
   const { filterValues, setFilterValues, filterFunction } = useFiltering([
     titleFiltering,
     genreFiltering,
@@ -47,6 +48,9 @@ const HomePage: React.FC = () => {
   };
 
   const movies = data ? data.results : [];
+
+  console.log(movies)
+
   const displayedMovies = filterFunction(movies);
 
   return (

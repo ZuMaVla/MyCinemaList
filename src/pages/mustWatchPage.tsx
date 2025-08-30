@@ -31,7 +31,13 @@ const MustWatchMoviesPage: React.FC = () => {
   const mustWatchMovieQueries = useQueries(
     movieIds.map((movieId: number) => ({
       queryKey: ["movie", movieId],
-      queryFn: () => getMovie(movieId.toString()),
+      queryFn: async () => {
+        const data = await getMovie(movieId.toString());
+        return {
+          ...data,
+          genre_ids: data.genres.map((g: any) => g.id),
+        };
+      },
     }))
   );
 
