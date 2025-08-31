@@ -12,7 +12,7 @@ import CalendarIcon from "@mui/icons-material/CalendarTodayTwoTone";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import img from '../../images/film-poster-placeholder.png';
 import { BaseMovieProps } from "../../types/interfaces";
 import AddToListButton from "../addToListButton";
@@ -30,10 +30,6 @@ interface MovieCardProps {
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ movie, action }) => {
-  const location = useLocation();
-  const isHomePage = location.pathname === "/";
-  const isUpcomingPage = location.pathname.includes("/movies/upcoming");
-
   const { userLists } = useContext(MoviesContext);
 
   const isFavourite = userLists.favourite.includes(movie.id);

@@ -6,3 +6,10 @@ export const excerpt = (string: string) => {
     separator: /,?\.* +/, // separate by spaces, including preceding commas and periods
   });
 };
+
+
+export const globalStore = {
+  homePageNum: 1,
+  upPageNum: 1,
+  language: "en",
+};

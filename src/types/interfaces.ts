@@ -60,6 +60,9 @@ export type FilterOption = "title" | "genre";
 
 export interface MovieListPageTemplateProps extends BaseMovieListProps {
   title: string;
+  pageNum: number;
+  setPageNum: React.Dispatch<React.SetStateAction<number>>;
+
 }
 
 export interface Review {

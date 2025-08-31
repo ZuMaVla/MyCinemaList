@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PageTemplate from "../components/templateMovieListPage";
 import { getMovies } from "../api/tmdb-api";
 import useFiltering from "../hooks/useFiltering";
-import MovieFilterUI, { titleFilter, genreFilter } from "../components/movieFilterUI";
-import { DiscoverMovies, BaseMovieProps } from "../types/interfaces";
+import MovieFilterUI, {
+  titleFilter,
+  genreFilter,
+} from "../components/movieFilterUI";
+import { DiscoverMovies } from "../types/interfaces";
 import { useQuery } from "react-query";
 import Spinner from "../components/spinner";
-import AddToFavouritesIcon from "../components/cardIcons/addToFavourites";
+import { globalStore } from "../util";
 
 const titleFiltering = {
   name: "title",
@@ -20,11 +23,18 @@ const genreFiltering = {
 };
 
 const HomePage: React.FC = () => {
-  const { data, error, isLoading, isError } = useQuery<DiscoverMovies, Error>(
-    "discover",
-    getMovies
-  );
+  const [pageNum, setPageNum] = useState(globalStore.homePageNum || 1); // start at page 1
+  useEffect(() => {
+    globalStore.homePageNum = pageNum;
+  }, [pageNum]);
 
+  const { data, error, isLoading, isError } = useQuery<DiscoverMovies, Error>(
+    ["discover", pageNum],
+    () => getMovies(pageNum),
+    {
+      enabled: !!pageNum,
+    }
+  );
   const { filterValues, setFilterValues, filterFunction } = useFiltering([
     titleFiltering,
     genreFiltering,
@@ -49,7 +59,7 @@ const HomePage: React.FC = () => {
 
   const movies = data ? data.results : [];
 
-  console.log(movies)
+  console.log(movies);
 
   const displayedMovies = filterFunction(movies);
 
@@ -58,9 +68,8 @@ const HomePage: React.FC = () => {
       <PageTemplate
         title="Discover Movies"
         movies={displayedMovies}
-        action={(movie: BaseMovieProps) => {
-          return <AddToFavouritesIcon {...movie} />
-        }}
+        pageNum={pageNum}
+        setPageNum={setPageNum}
       />
       <MovieFilterUI
         onFilterValuesChange={changeFilterValues}

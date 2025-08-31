@@ -1,17 +1,24 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PageTemplate from '../components/templateMovieListPage';
-import { DiscoverMovies, BaseMovieProps } from "../types/interfaces";
+import { DiscoverMovies } from "../types/interfaces";
 import { getUpcomingMovies } from "../api/tmdb-api";
 import { useQuery } from "react-query";
 import Spinner from "../components/spinner";
-import AddToMustWatchIcon from "../components/cardIcons/addToMustWatch";
-
+import { globalStore } from "../util";
 
 const UpcomingMoviesPage: React.FC = () => {
-  const { data, error, isLoading, isError } = useQuery<DiscoverMovies, Error>(
-      "upcoming",
-      getUpcomingMovies
-    );
+  const [pageNum, setPageNum] = useState(globalStore.upPageNum || 1); // start at page 1
+    useEffect(() => {
+      globalStore.upPageNum = pageNum;
+    }, [pageNum]);
+  
+const { data, error, isLoading, isError } = useQuery<DiscoverMovies, Error>(
+    ["upcoming", pageNum],
+    () => getUpcomingMovies(pageNum),
+    {
+      enabled: !!pageNum,
+    }
+  );
 
   if (isLoading) {
     return <Spinner />;
@@ -27,9 +34,9 @@ const UpcomingMoviesPage: React.FC = () => {
     <PageTemplate
       title='Upcoming Movies'
       movies={movies}
-      action={(movie: BaseMovieProps) => {
-          return <AddToMustWatchIcon {...movie} />
-        }}
+      pageNum={pageNum}
+      setPageNum={setPageNum}
+
     />
   );
 };
