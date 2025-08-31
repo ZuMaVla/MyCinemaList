@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { Grid } from "@mui/material";
 import { Link } from "@mui/material";
 //import { List, ListItem, ListItemText } from "@mui/material";
-import { MovieDetailsProps } from "../../types/interfaces";
+import { Actor, MovieDetailsProps } from "../../types/interfaces";
 import NavigationIcon from "@mui/icons-material/Navigation";
 import Fab from "@mui/material/Fab";
 import Drawer from "@mui/material/Drawer";
@@ -88,7 +88,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
         Starring:
       </Typography>
       <Grid container spacing={2}>
-        {movie.starring.map((actor) => (
+        {movie.starring.map((actor: Actor) => (
           <Grid item xs={12} sm={6} key={actor.id}>
             <Typography variant="body1">
               <Link

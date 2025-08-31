@@ -1,10 +1,9 @@
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta } from '@storybook/react';
 import MovieList from "../components/movieList";
 import SampleMovie from "./sampleData";
 import { MemoryRouter } from "react-router";
 
-import AddToFavouritesIcon from "../components/cardIcons/addToFavourites";
 import Grid from "@mui/material/Grid";
 import MoviesContextProvider from "../contexts/moviesContext";
 
@@ -33,7 +32,6 @@ export const Basic = () => {
     <Grid container spacing={5}>
       <MovieList
         movies={movies}
-        action={(movie) => <AddToFavouritesIcon {...movie} />}
       />
     </Grid>
   );

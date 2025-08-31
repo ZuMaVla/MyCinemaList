@@ -7,6 +7,7 @@ import { useQueries } from "react-query";
 import { getMovie } from "../api/tmdb-api";
 import Spinner from "../components/spinner";
 import WriteReview from "../components/cardIcons/writeReview";
+import { GenreProps } from "../types/interfaces";
 
 const titleFiltering = {
   name: "title",
@@ -32,10 +33,10 @@ const WatchedMoviesPage: React.FC = () => {
     movieIds.map((movieId: number) => ({
       queryKey: ["movie", movieId],
       queryFn: async () => {
-        const data = await getMovie(movieId.toString());
+        const data = await getMovie(movieId);
         return {
           ...data,
-          genre_ids: data.genres.map((g: any) => g.id),
+          genre_ids: data.genres.map((g: GenreProps) => g.id),
         };
       },
     }))
@@ -59,6 +60,8 @@ const WatchedMoviesPage: React.FC = () => {
       <PageTemplate
         title="Watched Movies"
         movies={displayedMovies}
+        pageNum={1}
+        setPageNum={() => {}}
         action={(movie) => (
           <WriteReview {...movie} />
         )}

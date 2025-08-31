@@ -5,7 +5,7 @@ import TemplateMoviePage from "../components/templateMoviePage";
 import { fetchStarring, getMovie } from "../api/tmdb-api";
 import { useQuery } from "react-query";
 import Spinner from "../components/spinner";
-import { MovieDetailsProps } from "../types/interfaces";
+import { MovieDetailsProps, StarringProps } from "../types/interfaces";
 
 const MovieDetailsPage: React.FC = () => {
   const movieId = Number(useParams<{ id: string }>().id!);
@@ -22,7 +22,7 @@ const MovieDetailsPage: React.FC = () => {
     data: starring,
     isLoading: isStarringLoading,
     isError: isStarringError,
-  } = useQuery<{ id: number; name: string; character: string }[], Error>(["starring", movieId], () => fetchStarring(movieId));
+  } = useQuery<StarringProps, Error>(["starring", movieId], () => fetchStarring(movieId));
 
   if (isLoading || isStarringLoading) {
     return <Spinner />;
@@ -43,11 +43,7 @@ const MovieDetailsPage: React.FC = () => {
   // add actors into movie object
   const enrichedMovie: MovieDetailsProps = {
     ...movie,
-    starring: (starring || []).map((actor) => ({
-      id: actor.id, //
-      name: actor.name,
-      character: actor.character, // fallback if character is missing
-    })),
+    starring: starring?.cast || []
   };
   console.log(enrichedMovie);
   return (

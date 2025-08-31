@@ -24,6 +24,19 @@ export interface BaseMovieListProps {
   action?: (m: BaseMovieProps) => React.ReactNode;
 }
 
+export interface Actor {
+  id: number;
+  name: string;
+  character: string;
+  known_for_department: string;
+}
+
+export interface StarringProps {
+  cast: Actor[];
+}
+
+export type StarringType = Actor[];
+
 export interface MovieDetailsProps extends BaseMovieProps {
   genres: {
     id: number;
@@ -33,12 +46,7 @@ export interface MovieDetailsProps extends BaseMovieProps {
     iso_3166_1: string;
     name: string;
   }[];
-  starring: {
-    id: number;
-    name: string;
-    character: string;
-  }[];
-
+  starring: StarringType;
 }
 
 export interface MovieImage {
@@ -71,11 +79,13 @@ export interface Review {
   author: string;
 }
 
+export interface GenreProps {
+  id: string;
+  name: string
+}
+
 export interface GenreData {
-  genres: {
-    id: string;
-    name: string
-  }[];
+  genres: GenreProps[];
 }
 
 export interface DiscoverMovies {
