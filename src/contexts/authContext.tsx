@@ -43,16 +43,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: "http://localhost:3000/login",
-      },
-    });
-    if (error) throw error;
-  };
+const signUp = async (email: string, password: string) => {
+  const redirectBase =
+    import.meta.env.VITE_ENV === "development"
+      ? "http://localhost:3000"
+      : "https://mycinemalist.onrender.com";
+
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${redirectBase}/login`,
+    },
+  });
+
+  if (error) throw error;
+};
 
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
@@ -63,8 +69,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const resetPassword = async (email: string) => {
+  const redirectBase =
+    import.meta.env.VITE_ENV === "development"
+      ? "http://localhost:3000"
+      : "https://mycinemalist.onrender.com";
+
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: "http://localhost:3000/changepassword",
+      redirectTo: `${redirectBase}/changepassword`,
     });
     if (error) throw error;
   };
