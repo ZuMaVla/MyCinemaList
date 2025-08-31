@@ -12,7 +12,7 @@ export const getMovies = () => {
     });
 };
 
-export const getMovie = (id: string) => {
+export const getMovie = (id: number) => {
   return fetch(
     `https://api.themoviedb.org/3/movie/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}`
   ).then((response) => {
@@ -82,4 +82,22 @@ export const getUpcomingMovies = () => {
     });
 };
 
+export const fetchStarring = async (movieId: number): Promise<{ id: number; name: string; character: string }[]> => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US`
+  );
 
+  if (!response.ok) {
+    throw new Error(`Failed to fetch credits: ${response.status}`);
+  }
+
+  const data: any = await response.json();
+
+  return data.cast
+    .filter(p => p.known_for_department === "Acting")
+    .map((p: any) => ({
+      id: p.id,
+      name: p.name,
+      character: p.character
+    }))
+};

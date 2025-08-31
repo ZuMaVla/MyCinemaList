@@ -45,10 +45,10 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, action }) => {
       <CardHeader
         avatar={
           <>
-            {isFavourite && isHomePage && (
+            {isFavourite && (
               <Avatar sx={styles.avatar}><FavoriteIcon /></Avatar>
             )}
-            {isMustWatch && isUpcomingPage && (
+            {isMustWatch && (
               <Avatar sx={styles.avatar}><PlaylistAddCheckIcon /></Avatar>
             )}
           </>

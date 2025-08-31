@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Route, Navigate, Routes } from "react-router-dom";
 import SiteHeader from './components/siteHeader';
 import HomePage from "./pages/homePage";
-import MoviePage from "./pages/movieDetailsPage";
+import MovieDetailsPage from "./pages/movieDetailsPage";
 import FavouriteMoviesPage from "./pages/favouriteMoviesPage";
 import UpcomingMoviesPage from "./pages/upcomingMoviesPage";
 import MovieReviewPage from "./pages/movieReviewPage";
@@ -45,7 +45,7 @@ const App = () => {
                   }
                 />
                 <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} />
-                <Route path="/movies/:id" element={<MoviePage />} />
+                <Route path="/movies/:id" element={<MovieDetailsPage />} />
                 <Route path="/reviews/:id" element={<MovieReviewPage/>} />
                 <Route path="/reviews/form" element={<AddMovieReviewPage/>} />
                 <Route path="/movies/mustwatch" element={

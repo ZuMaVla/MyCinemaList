@@ -32,10 +32,10 @@ const styles = {
 
 const MovieHeader: React.FC<MovieDetailsProps> = (movie) => {
 
-  const { favourites } = useContext(MoviesContext);
-  const isFavourite = favourites.includes(movie.id);
-  const { mustWatch } = useContext(MoviesContext);
-  const isMustWatch = mustWatch.includes(movie.id);
+  // const { favourites } = useContext(MoviesContext);
+  // const isFavourite = favourites.includes(movie.id);
+  // const { mustWatch } = useContext(MoviesContext);
+  // const isMustWatch = mustWatch.includes(movie.id);
   
   return (
     <Paper component="div" sx={styles.root}>
@@ -43,16 +43,7 @@ const MovieHeader: React.FC<MovieDetailsProps> = (movie) => {
         <ArrowBackIcon color="primary" fontSize="large" />
       </IconButton>
       <Box sx={styles.titleWithIcon}>
-        {isFavourite ? (
-          <Avatar sx={styles.avatar}>
-            <FavoriteIcon />
-          </Avatar>
-        ) : null}      
-        {isMustWatch ? (
-          <Avatar sx={styles.avatar}>
-            <PlaylistAddCheckIcon />
-          </Avatar>
-        ) : null}
+        {/*  */}
       <Typography variant="h4" component="h3">
         {movie.title}{"   "}
         <a href={movie.homepage}>

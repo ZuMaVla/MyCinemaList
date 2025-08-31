@@ -5,6 +5,9 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import MonetizationIcon from "@mui/icons-material/MonetizationOn";
 import StarRate from "@mui/icons-material/StarRate";
 import Typography from "@mui/material/Typography";
+import { Grid } from "@mui/material";
+import { Link } from "@mui/material";
+//import { List, ListItem, ListItemText } from "@mui/material";
 import { MovieDetailsProps } from "../../types/interfaces";
 import NavigationIcon from "@mui/icons-material/Navigation";
 import Fab from "@mui/material/Fab";
@@ -80,6 +83,30 @@ const MovieDetails: React.FC<MovieDetailsProps> = (movie) => {
           </li>
         ))}
       </Paper>
+    <div>
+      <Typography variant="h5" gutterBottom>
+        Starring:
+      </Typography>
+      <Grid container spacing={2}>
+        {movie.starring.map((actor) => (
+          <Grid item xs={12} sm={6} key={actor.id}>
+            <Typography variant="body1">
+              <Link
+                href={`https://www.themoviedb.org/person/${actor.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                underline="hover"
+              >
+                {actor.name}
+              </Link>{" "}
+              <span style={{ color: "#666" }}>
+                (character – {actor.character})
+              </span>
+            </Typography>
+          </Grid>
+        ))}
+      </Grid>
+    </div>
       <Fab
         color="secondary"
         variant="extended"
