@@ -47,7 +47,7 @@ const signUp = async (email: string, password: string) => {
   const redirectBase =
     import.meta.env.VITE_ENV === "development"
       ? "http://localhost:3000"
-      : "https://mycinemalist.onrender.com";
+      : import.meta.env.NEXT_PUBLIC_SITE_URL ?? `https://${window.location.hostname}`;
 
   const { error } = await supabase.auth.signUp({
     email,
