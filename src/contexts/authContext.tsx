@@ -69,10 +69,24 @@ const signUp = async (email: string, password: string) => {
   };
 
   const resetPassword = async (email: string) => {
-  const redirectBase =
-    import.meta.env.VITE_ENV === "development"
-      ? "http://localhost:3000"
-      : "https://mycinemalist.onrender.com";
+  // const redirectBase =
+  //   import.meta.env.VITE_ENV === "development"
+  //     ? "http://localhost:3000"
+  //     : "https://mycinemalist.onrender.com";
+
+    const getRedirectBase = () => {
+      const hostname = window.location.hostname;
+
+      if (hostname === "localhost") {
+        return "http://localhost:3000";
+      } else if (hostname.includes("onrender.com")) {
+        return "https://mycinemalist.onrender.com";
+      } else {
+        return "https://my-cinema-list.vercel.app";
+      } 
+    };
+
+  const redirectBase = getRedirectBase();  
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${redirectBase}/changepassword`,
