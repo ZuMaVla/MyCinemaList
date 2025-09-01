@@ -22,6 +22,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const redirectBase =
+    import.meta.env.VITE_ENV === "development"
+      ? "http://localhost:3000"
+      : import.meta.env.NEXT_PUBLIC_SITE_URL ?? `https://${window.location.hostname}`;
+
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -44,11 +49,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
 const signUp = async (email: string, password: string) => {
-  const redirectBase =
-    import.meta.env.VITE_ENV === "development"
-      ? "http://localhost:3000"
-      : import.meta.env.NEXT_PUBLIC_SITE_URL ?? `https://${window.location.hostname}`;
-
   const { error } = await supabase.auth.signUp({
     email,
     password,
@@ -69,25 +69,6 @@ const signUp = async (email: string, password: string) => {
   };
 
   const resetPassword = async (email: string) => {
-  // const redirectBase =
-  //   import.meta.env.VITE_ENV === "development"
-  //     ? "http://localhost:3000"
-  //     : "https://mycinemalist.onrender.com";
-
-    const getRedirectBase = () => {
-      const hostname = window.location.hostname;
-
-      if (hostname === "localhost") {
-        return "http://localhost:3000";
-      } else if (hostname.includes("onrender.com")) {
-        return "https://mycinemalist.onrender.com";
-      } else {
-        return "https://my-cinema-list.vercel.app";
-      } 
-    };
-
-  const redirectBase = getRedirectBase();  
-
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${redirectBase}/changepassword`,
     });
