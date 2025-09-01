@@ -3,15 +3,20 @@ import MovieCard from "../components/movieCard";
 import SampleMovie from "./sampleData";
 import { MemoryRouter } from "react-router";
 import MoviesContextProvider from "../contexts/moviesContext";
-// import React from 'react';
-// import AddToListButton from '../components/addToListButton';
+import { AuthProvider } from "../contexts/authContext";
 
 const meta = {
   title: 'Home Page/MovieCard',
   component: MovieCard,
   decorators: [
-    (Story) => <MemoryRouter initialEntries={["/"]}>{Story()}</MemoryRouter>,
-    (Story) => <MoviesContextProvider>{Story()}</MoviesContextProvider>,
+    (Story) => 
+    <MemoryRouter initialEntries={["/"]}>
+      <AuthProvider>
+        <MoviesContextProvider>
+          {Story()}
+        </MoviesContextProvider>
+      </AuthProvider>
+    </MemoryRouter>,
   ],
 } satisfies Meta<typeof MovieCard>;
 
@@ -21,9 +26,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
   args: {
-    // action: (movie ) => <AddToListButton {...movie} />,
     movie: SampleMovie,
-
   }
 
 };
@@ -33,7 +36,6 @@ const sampleNoPoster = { ...SampleMovie, poster_path: undefined };
 export const Exceptional: Story = {
   args: {
     movie: sampleNoPoster,
-    // action: (movie ) => <AddToFavouritesIcon {...movie} />,
   }
 };
 Exceptional.storyName = "Exception";

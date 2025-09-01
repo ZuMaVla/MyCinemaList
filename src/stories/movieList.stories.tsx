@@ -3,18 +3,24 @@ import type { Meta } from '@storybook/react';
 import MovieList from "../components/movieList";
 import SampleMovie from "./sampleData";
 import { MemoryRouter } from "react-router";
-
 import Grid from "@mui/material/Grid";
 import MoviesContextProvider from "../contexts/moviesContext";
+import { AuthProvider } from "../contexts/authContext";
 
 
 const meta = {
   title: "Home Page/MovieList",
   component: MovieList,
   decorators: [
-      (Story) => <MemoryRouter initialEntries={["/"]}><Story /></MemoryRouter>,
-      (Story) => <MoviesContextProvider><Story /></MoviesContextProvider>,
-    ],
+      (Story) => 
+      <MemoryRouter initialEntries={["/"]}>
+        <AuthProvider>
+          <MoviesContextProvider>
+            <Story />
+          </MoviesContextProvider>
+        </AuthProvider>
+      </MemoryRouter>,
+  ],
     
 } satisfies Meta<typeof MovieList>;
 export default meta;

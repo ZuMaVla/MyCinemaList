@@ -2,20 +2,26 @@ import React from "react";
 import SiteHeader from "../components/siteHeader";
 import { MemoryRouter } from "react-router";
 import type { Meta, StoryObj } from '@storybook/react';
+import { AuthProvider } from "../contexts/authContext";
 
 const meta = {
   title: "App Header",
   component: SiteHeader,
   decorators: [
-    (Story: React.FC) => <MemoryRouter initialEntries={["/"]}><Story /></MemoryRouter>,
+    (Story: React.FC) => 
+    <MemoryRouter initialEntries={["/"]}>
+      <AuthProvider>
+        <Story />
+      </AuthProvider>
+    </MemoryRouter>,
   ],
-}satisfies Meta<typeof SiteHeader>;;
+}satisfies Meta<typeof SiteHeader>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Basic: Story = { args: {}
- 
+export const Basic: Story = { 
+  args: {}
 };
 Basic.storyName = "Default";
